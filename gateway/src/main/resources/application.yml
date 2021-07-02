@@ -1,0 +1,82 @@
+server:
+  port: 8088
+
+---
+
+spring:
+  profiles: default
+  cloud:
+    gateway:
+      routes:
+        - id: mts
+          uri: http://localhost:8081
+          predicates:
+            - Path=/requests/** 
+        - id: trade
+          uri: http://localhost:8082
+          predicates:
+            - Path=/trades/**/bids/**/asks/** 
+        - id: pricing
+          uri: http://localhost:8083
+          predicates:
+            - Path= /prices/**
+        - id: assets
+          uri: http://localhost:8084
+          predicates:
+            - Path= /assets/**
+        - id: notification
+          uri: http://localhost:8085
+          predicates:
+            - Path= 
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+
+---
+
+spring:
+  profiles: docker
+  cloud:
+    gateway:
+      routes:
+        - id: mts
+          uri: http://mts:8080
+          predicates:
+            - Path=/requests/** 
+        - id: trade
+          uri: http://trade:8080
+          predicates:
+            - Path=/trades/**/bids/**/asks/** 
+        - id: pricing
+          uri: http://pricing:8080
+          predicates:
+            - Path= /prices/**
+        - id: assets
+          uri: http://assets:8080
+          predicates:
+            - Path= /assets/**
+        - id: notification
+          uri: http://notification:8080
+          predicates:
+            - Path= 
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+server:
+  port: 8080
